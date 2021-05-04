@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Proveedores
+{% endblock%}
+
+{% block body%}
+
+
+
+<div class="row mt-5">
+    <div class="col-4 offset-1">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Agregar Proveedor</h3>
+                <form action="/add_proveedor" method="POST">
+                    <div class="mb-3">
+        
+                        <label for="proveedor" class="form-label">Nombre Proveedor</label>
+                        <input type="text" placeholder="Proveedor" name="proveedor" class="form-control">
+                    </div>
+                    <div class="mb-3">
+        
+                        <label for="telefono" class="form-label">Telefono</label>
+                        <input type="text" placeholder="Telefono" name="telefono" class="form-control">
+                    </div>
+                    <div class="mb-3 d-grid">
+        
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-5 offset-1">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proveedor in proveedores%}
+                <tr>
+                    <td>{{ proveedor.1 }}</td>
+                    <td>{{ proveedor.2 }}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

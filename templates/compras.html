@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Compras
+{% endblock%}
+
+{%block body%}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Nombre Proveedor</th>
+            <th>Concepto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Costo</th>
+            <th>Saldo</th>
+            <th>Abono</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for compra in compras%}
+        <tr>
+            <td>{{compra.0}} </td>
+            <td>{{compra.1}}</td>
+            <td>{{compra.2}}</td>
+            <td>{{compra.3}}</td>
+            <td>{{compra.4}}</td>
+            <td>{{compra.5}}</td>
+            <td>{{compra.6}}</td>
+            <td>
+                <a href="/add_abono_compra/{{compra.7}}" class="btn btn-info">Agregar</a>
+                <a href="/abono_compra/{{compra.7}}" class="btn btn-secondary">Ver</a>
+            </td>
+        </tr>
+        {% endfor%}
+    </tbody>
+</table>
+{%endblock%}

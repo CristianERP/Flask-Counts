@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Agregar Abono
+{% endblock%}
+
+{% block body %}
+<div class="row mt-5 border mx-5 bg-light rounded">
+    <div class="col-6 offset-3">
+        <h3 class="text-center">Agregar Abono</h3>
+        <form action="/insertar_abono/{{id_venta}}" method="POST">
+            <div class="mb-3">
+                <label for="fecha" class="form-label">Fecha</label>
+                <input type="date" name="fecha" placeholder="Fecha" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="valor_abono" class="form-label">Valor Abono</label>
+                <input type="number" name="valor_abono" placeholder="Valor Abono" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="fecha" class="form-label">Descripcion</label>
+                <input type="text" name="descripcion" placeholder="Descripcion" class="form-control">
+            </div>
+            <div class="mb-3 d-grid">
+                <button class="btn btn-primary">Agregar Abono</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

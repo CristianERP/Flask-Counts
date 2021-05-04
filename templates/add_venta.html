@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Agregar Venta
+{% endblock%}
+
+{% block body%}
+<div class="row mt-5 border mx-5 bg-light rounded">
+    <div class="col-6 offset-3">
+        <h3 class="text-center">Agregar Venta</h3>
+        <form action="/ingresar_venta" method="POST">
+            <div class="mb-3">
+                <label for="fecha" class="form-label">Fechas</label>
+                <input type="date" name="fecha" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="form-label">Cliente</label>
+                <select name="id_cliente" class="form-select">
+                    <option selected>--Select--</option>
+                    {% for cliente in clientes%}
+                    <option value="{{cliente.0}}">{{cliente.1}} </option>
+                    {% endfor %}
+                </select>        
+            </div>
+            <div class="mb-3">
+                <label for="form-label">Concepto</label>
+                <input type="text" name="concepto" placeholder="Concepto" class="form-control">       
+            </div>
+            <div class="mb-3">
+                <label for="form-label">Cantidad</label>
+                <input type="number" name="cantidad" id="cantidad" placeholder="Cantidad" class="form-control"  onchange="precioTotal()">        
+            </div>
+            <div class="mb-3">
+                <label for="form-label">Valor Unitario</label>
+                <input type="number" name="valor_unitario" id="valor_unitario" placeholder="Valor Unitario" class="form-control" onchange="precioTotal()">
+            </div>
+            <div class="mb-3">
+                <label for="form-label">Total</label>
+                <input type="number" name="total" id="total" readonly class="form-control">
+            </div>
+            <div class="mb-3 d-grid">
+                <button type="submit" class="btn btn-primary">Guardar Venta</button>
+            </div>
+        
+            
+        </form>
+    </div>
+</div>
+
+{% endblock %}

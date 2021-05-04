@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Abonos Compras
+{% endblock%}
+
+{% block body%}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Descripcion</th>
+            <th>Valor</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for abono in abonos%}
+        <tr>
+            <td>{{abono.4}}</td>
+            <td>{{abono.3}}</td>
+            <td>{{abono.2}}</td>
+        </tr>
+        {% endfor%}
+    </tbody>
+</table>
+{% endblock%}
