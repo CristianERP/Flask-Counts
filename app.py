@@ -23,7 +23,7 @@ def Index():
 @app.route('/ventas')
 def ventas():
     cur = mysql.connection.cursor()
-    cur.execute('SELECT v.fecha, c.nombre, v.concepto, v.cantidad, v.valor_unitario, v.total, s.saldo, v.id_venta FROM venta v, cliente c, saldoVenta s WHERE c.id_cliente = v.id_cliente AND s.id_venta = v.id_venta')
+    cur.execute('SELECT v.fecha, c.nombre, v.concepto, v.cantidad, v.valor_unitario, v.total, v.id_venta FROM venta v, cliente c WHERE c.id_cliente = v.id_cliente')
     data = cur.fetchall()
     print(data)    
     return render_template('ventas.html', ventas = data)
@@ -55,7 +55,7 @@ def ingresar_venta():
 @app.route('/abono_ventas/<string:id>')
 def abono(id):
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM abonoVenta WHERE id_venta = %s',(id,))
+    cur.execute('SELECT * FROM abonoVenta WHERE id_cliente = %s',(id,))
     data = cur.fetchall()
     return render_template('abono.html', abonos = data)
 
@@ -70,7 +70,7 @@ def insertar_abono(id):
         valor_abono = request.form['valor_abono']
         descripcion = request.form['descripcion']
         cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO abonoVenta (id_venta, valor_abono, descripcion, fecha) VALUES (%s, %s, %s, %s)',(id, valor_abono, descripcion, fecha))
+        cur.execute('INSERT INTO abonoVenta (id_cliente, valor_abono, descripcion, fecha) VALUES (%s, %s, %s, %s)',(id, valor_abono, descripcion, fecha))
         mysql.connection.commit()
         return redirect(url_for('ventas'))
 
@@ -117,7 +117,7 @@ def add_cliente():
 @app.route('/compras')
 def compras():
     cur = mysql.connection.cursor()
-    cur.execute('SELECT c.fecha, p.nombre, c.concepto, c.cantidad, c.valor_unitario, c.total, s.saldo, c.id_compra FROM compra c, proveedor p, saldoCompra s WHERE p.id_proveedor = c.id_proveedor AND s.id_compra = c.id_compra')
+    cur.execute('SELECT c.fecha, p.nombre, c.concepto, c.cantidad, c.valor_unitario, c.total, c.id_compra FROM compra c, proveedor p WHERE p.id_proveedor = c.id_proveedor')
     data = cur.fetchall()
     print(data)    
     return render_template('compras.html', compras = data)
@@ -138,12 +138,6 @@ def ingresar_compra():
         cantidad = request.form['cantidad']
         valor_unitario = request.form['valor_unitario']
         costo = request.form['total']
-        print(fecha)
-        print(proveedor)
-        print(concepto)
-        print(cantidad)
-        print(valor_unitario)
-        print(costo)
         cur = mysql.connection.cursor()
         cur.execute('INSERT INTO compra (id_proveedor, concepto, cantidad, valor_unitario, total, fecha) VALUES (%s, %s, %s, %s, %s, %s)',(proveedor, concepto, cantidad, valor_unitario, costo, fecha))
         mysql.connection.commit()
@@ -171,6 +165,50 @@ def insertar_abono_compra(id):
         cur.execute('INSERT INTO abonoCompra (id_compra, valor_abono, descripcion, fecha) VALUES (%s, %s, %s, %s)',(id, valor_abono, descripcion, fecha))
         mysql.connection.commit()
         return redirect(url_for('compras'))
+
+##SALDOS 
+@app.route('/saldos', methods=['GET', 'POST'])
+def saldos():
+    if request.method == 'POST':
+        cur = mysql.connection.cursor()
+        if(request.form['id_cliente'] != '0'):
+            id_cliente = request.form['id_cliente']
+            cur.execute('SELECT * FROM cliente')
+            clientes = cur.fetchall()
+            cur.execute('SELECT * FROM proveedor')
+            proveedores = cur.fetchall()
+            cur.execute('SELECT * FROM cliente WHERE id_cliente = %s', (id_cliente,))
+            cliente = cur.fetchall()
+            cur.execute('SELECT * FROM saldoVentaTotal WHERE id_cliente =%s',(id_cliente,))
+            data = cur.fetchall()[0][1]
+            return render_template('saldos.html', cliente = cliente, saldo=data, clientes=clientes, proveedores=proveedores)
+
+        id_proveedor = request.form['id_proveedor']
+        cur.execute('SELECT * FROM cliente')
+        clientes = cur.fetchall()
+        cur.execute('SELECT * FROM proveedor')
+        proveedores = cur.fetchall()
+
+        cur.execute('SELECT * FROM proveedor WHERE id_proveedor = %s', (id_proveedor,))
+        proveedor = cur.fetchall()
+  
+        cur.execute('SELECT * FROM saldoCompraTotal WHERE id_proveedor =%s',(id_proveedor,))
+        data = cur.fetchall()[0][1]
+    
+        return render_template('saldos.html', proveedor = proveedor, saldo=data, clientes=clientes, proveedores=proveedores)
+    else:
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM cliente')
+        data = cur.fetchall()
+        cur.execute('SELECT * FROM proveedor')
+        proveedores = cur.fetchall()
+        # cur.execute('SELECT * FROM cliente WHERE id_cliente = %s', (id,))
+        # cliente = cur.fetchall()
+        # cur.execute('SELECT * FROM saldoVentaTotal WHERE id_cliente =%s',(id,))
+        # saldo = cur.fetchall()[0][1]
+        return render_template('saldos.html', clientes=data, proveedores = proveedores)
+    
+    
 
 if __name__ == '__main__':
     app.run(port=3000, debug=True)

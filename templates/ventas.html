@@ -5,35 +5,30 @@ Ventas
 {% endblock%}
 
 {%block body%}
-<table class="table">
-    <thead>
-        <tr>
-            <th>Fecha</th>
-            <th>Nombre Cliente</th>
-            <th>Concepto</th>
-            <th>Cantidad</th>
-            <th>Precio Unitario</th>
-            <th>Costo</th>
-            <th>Saldo</th>
-            <th>Abono</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for venta in ventas%}
-        <tr>
-            <td>{{venta.0}} </td>
-            <td>{{venta.1}}</td>
-            <td>{{venta.2}}</td>
-            <td>{{venta.3}}</td>
-            <td>{{venta.4}}</td>
-            <td>{{venta.5}}</td>
-            <td>{{venta.6}}</td>
-            <td>
-                <a href="/add_abono/{{venta.7}}" class="btn btn-info">Agregar</a>
-                <a href="/abono_ventas/{{venta.7}}" class="btn btn-secondary">Ver</a>
-            </td>
-        </tr>
-        {% endfor%}
-    </tbody>
-</table>
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Nombre Cliente</th>
+                <th>Concepto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Costo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venta in ventas%}
+            <tr>
+                <td>{{venta.0}} </td>
+                <td>{{venta.1}}</td>
+                <td>{{venta.2}}</td>
+                <td>{{venta.3}}</td>
+                <td>{{venta.4}}</td>
+                <td>{{venta.5}}</td>
+            </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+</div>
 {%endblock%}

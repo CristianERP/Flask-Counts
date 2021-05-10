@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Saldos
+{% endblock%}
+
+{% block body %}
+<form action="/saldos" method="POST">
+    <div class="row">
+        <div class="col-4 offset-1">
+            <div class="my-3">
+                <label for="nombre" class="form-label">Cliente</label>
+                <select name="id_cliente" class="form-select" onchange="this.form.submit()">
+                    <option selected value="0">--Select--</option>
+                    {% for cliente in clientes%}
+                    <option value="{{cliente.0}}">{{cliente.1}} </option>
+                    {% endfor %}
+                </select>  
+            </div>
+        </div>
+        <div class="col-4 offset-2">
+            <div class="my-3">
+                <label for="nombre" class="form-label">Proveedor</label>
+                <select name="id_proveedor" class="form-select" onchange="this.form.submit()">
+                    <option selected value="0">--Select--</option>
+                    {% for proveedor in proveedores%}
+                    <option value="{{proveedor.0}}">{{proveedor.1}} </option>
+                    {% endfor %}
+                </select>  
+            </div>
+        </div>
+    </div>
+
+   
+</form>
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Saldo</th>
+                <th>Abono</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%if cliente%}
+            {%for item in cliente%}
+            <tr>
+                <td>{{item.1}}</td>
+                <td id="currency_col">{{saldo}}</td>
+                <td>
+                    <a href="/add_abono/{{item.0}}" class="btn btn-info">Agregar</a>
+                    <a href="/abono_ventas/{{item.0}}" class="btn btn-secondary">Ver</a>  
+                </td>
+            </tr>
+            {%endfor%}
+            {%endif%}
+            {%for item in proveedor%}
+            <tr>
+                <td>{{item.1}}</td>
+                <td id="currency_col">{{saldo}}</td>
+                <td>
+                    <a href="/add_abono/{{item.0}}" class="btn btn-info">Agregar</a>
+                    <a href="/abono_ventas/{{item.0}}" class="btn btn-secondary">Ver</a>  
+                </td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+
+<script >
+    // BY https://tato.la/darle-formato-a-monedas-con-javascript/
+    function formatCurrency (locales, currency, fractionDigits, number) {
+        var formatted = new Intl.NumberFormat(locales, {
+            style: 'currency',
+            currency: currency,
+            minimumFractionDigits: fractionDigits
+        }).format(number);
+        return formatted;
+    }
+    document.getElementById('currency_col').innerHTML = formatCurrency("es-CO", "COP", 2, document.querySelector('#currency_col').innerText );
+</script>
+{% endblock %}
