@@ -37,14 +37,12 @@ Clientes
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Telefono</th>
                 </tr>
             </thead>
             <tbody>
                 {% for cliente in clientes%}
                 <tr>
                     <td>{{ cliente.1 }}</td>
-                    <td>{{ cliente.2 }}</td>
                 </tr>
                 {%endfor%}
             </tbody>

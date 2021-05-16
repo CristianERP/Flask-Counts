@@ -6,6 +6,8 @@ Abonos
 
 {% block body%}
 <div class="container">
+    <h1 class="text-center border-bottom border-primary border-2">{{cliente}}</h1>
+    <h2>Abonos</h2>
     <table class="table">
         <thead>
             <tr>
@@ -17,7 +19,7 @@ Abonos
         <tbody>
             {% for abono in abonos%}
             <tr>
-                <td>{{abono.4}}</td>
+                <td>{{abono.5}} {{abono.6}} {{abono.7}}</td>
                 <td>{{abono.3}}</td>
                 <td>{{abono.2}}</td>
             </tr>

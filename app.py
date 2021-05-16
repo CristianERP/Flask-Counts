@@ -23,7 +23,7 @@ def Index():
 @app.route('/ventas')
 def ventas():
     cur = mysql.connection.cursor()
-    cur.execute('SELECT v.fecha, c.nombre, v.concepto, v.cantidad, v.valor_unitario, v.total, v.id_venta FROM venta v, cliente c WHERE c.id_cliente = v.id_cliente')
+    cur.execute('SELECT v.fecha, c.nombre, v.concepto, v.cantidad, v.valor_unitario, v.total, v.id_venta, YEAR(v.fecha), MONTHNAME(v.fecha), DAY(v.fecha) FROM venta v, cliente c WHERE c.id_cliente = v.id_cliente')
     data = cur.fetchall()
     print(data)    
     return render_template('ventas.html', ventas = data)
@@ -55,9 +55,11 @@ def ingresar_venta():
 @app.route('/abono_ventas/<string:id>')
 def abono(id):
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM abonoVenta WHERE id_cliente = %s',(id,))
+    cur.execute('SELECT *, YEAR(fecha), MONTHNAME(fecha), DAY(fecha)  FROM abonoVenta WHERE id_cliente = %s',(id,))
     data = cur.fetchall()
-    return render_template('abono.html', abonos = data)
+    cur.execute('SELECT nombre FROM cliente WHERE id_cliente = %s', (id,))
+    cliente = cur.fetchall()[0][0]
+    return render_template('abono.html', abonos = data, cliente = cliente)
 
 @app.route('/add_abono/<string:id>')
 def add_abono(id):
