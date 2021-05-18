@@ -15,6 +15,7 @@ Ventas
                 <th>Cantidad</th>
                 <th>Precio Unitario</th>
                 <th>Costo</th>
+                <th>Acción</th>
             </tr>
         </thead>
         <tbody>
@@ -29,9 +30,14 @@ Ventas
                 <td>{{venta.3}}</td>
                 <td>{{venta.4}}</td>
                 <td>{{venta.5}}</td>
+                <td>
+                    <a href="/eliminar/{{venta.6}}" class="btn btn-danger" id='confirm'>Eliminar</a>
+                </td>
             </tr>
             {% endfor%}
         </tbody>
     </table>
+
 </div>
+
 {%endblock%}

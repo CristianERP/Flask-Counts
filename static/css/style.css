@@ -1,3 +1,11 @@
 body{
     background-color: rgb(255, 255, 241);
 }
+
+.card-body p{
+    font-weight: bold;
+    color: dodgerblue;
+}
+.card-body span{
+    color: black;
+}

@@ -68,9 +68,21 @@ begin
 end
 $$
 delimiter ;
+
+delimiter $$
+create trigger saldo_eliminar before delete on venta
+for each row
+begin
+	update saldoVentaTotal set saldo = saldo - old.total where id_cliente = old.id_cliente;
+end
+$$
+delimiter ;
+
 select * from cliente;
 select * from saldoVentaTotal;
 select * from abonoVenta;
+
+select * from venta;
 
 
 create table proveedor(

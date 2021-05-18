@@ -23,9 +23,8 @@ def Index():
 @app.route('/ventas')
 def ventas():
     cur = mysql.connection.cursor()
-    cur.execute('SELECT v.fecha, c.nombre, v.concepto, v.cantidad, v.valor_unitario, v.total, v.id_venta, YEAR(v.fecha), MONTHNAME(v.fecha), DAY(v.fecha) FROM venta v, cliente c WHERE c.id_cliente = v.id_cliente')
-    data = cur.fetchall()
-    print(data)    
+    cur.execute('SELECT v.fecha, c.nombre, v.concepto, v.cantidad, v.valor_unitario, v.total, v.id_venta, YEAR(v.fecha), MONTHNAME(v.fecha), DAY(v.fecha) FROM venta v, cliente c WHERE c.id_cliente = v.id_cliente ORDER BY v.fecha')
+    data = cur.fetchall()  
     return render_template('ventas.html', ventas = data)
 
 @app.route('/add_venta')
@@ -115,13 +114,13 @@ def add_cliente():
         flash('Cliente Agregado')
         return redirect(url_for('cliente'))
 
+##COMPRAS
 
 @app.route('/compras')
 def compras():
     cur = mysql.connection.cursor()
     cur.execute('SELECT c.fecha, p.nombre, c.concepto, c.cantidad, c.valor_unitario, c.total, c.id_compra FROM compra c, proveedor p WHERE p.id_proveedor = c.id_proveedor')
-    data = cur.fetchall()
-    print(data)    
+    data = cur.fetchall()   
     return render_template('compras.html', compras = data)
 
 @app.route('/add_compra')
@@ -210,7 +209,20 @@ def saldos():
         # saldo = cur.fetchall()[0][1]
         return render_template('saldos.html', clientes=data, proveedores = proveedores)
     
-    
+##ELIMIAR VENTA
+@app.route('/eliminar/<string:id_venta>')
+def eliminar(id_venta):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT v.id_venta, c.nombre, v.concepto, v.cantidad, v.valor_unitario, v.total, YEAR(v.fecha), MONTHNAME(v.fecha), DAY(v.fecha) FROM venta v, cliente c WHERE v.id_cliente = c.id_cliente AND v.id_venta = %s',(id_venta,))
+    data = cur.fetchall()[0]
+    return render_template('admin.html', venta = data)
+
+@app.route('/eliminar_venta/<string:id_venta>')
+def eliminar_venta(id_venta):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM venta WHERE id_venta = %s',(id_venta,))
+    mysql.connection.commit()
+    return redirect(url_for('ventas'))
 
 if __name__ == '__main__':
     app.run(port=3000, debug=True)

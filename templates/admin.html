@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Admin
+{% endblock%}
+
+{% block body%}
+<div class="container">
+    <div class="row">
+        <div class="col-4 offset-4">
+            <div class="card my-5">
+                <div class="card-body text-center">
+                    <h3>{{venta.1}}</h3>
+                    <p>Fecha: <span>{{venta.6}} {{venta.7}} {{venta.8}} </span></p>
+                    <p>Concepto: <span>{{venta.2}}</span></p>
+                    <p>Cantidad: <span>{{venta.3}}</span></p>
+                    <p>Valor Unitario: <span>{{venta.4}}</span></p>
+                    <p>Total: <span>{{venta.5}}</span></p>
+                    <a href="/eliminar_venta/{{venta.0}}" class="btn btn-danger">Eliminar Venta</a>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</div>
+{% endblock%}
