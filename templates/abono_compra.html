@@ -5,22 +5,26 @@ Abonos Compras
 {% endblock%}
 
 {% block body%}
-<table class="table">
-    <thead>
-        <tr>
-            <th>Fecha</th>
-            <th>Descripcion</th>
-            <th>Valor</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for abono in abonos%}
-        <tr>
-            <td>{{abono.4}}</td>
-            <td>{{abono.3}}</td>
-            <td>{{abono.2}}</td>
-        </tr>
-        {% endfor%}
-    </tbody>
-</table>
+<div class="container">
+    <h1 class="text-center border-bottom border-primary border-2">{{proveedor}}</h1>
+    <h2>Abonos</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Descripcion</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for abono in abonos%}
+            <tr>
+                <td>{{abono.5}} {{abono.6}} {{abono.7}}</td>
+                <td>{{abono.3}}</td>
+                <td>{{abono.2}}</td>
+            </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+</div>
 {% endblock%}

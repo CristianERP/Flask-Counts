@@ -20,12 +20,20 @@ def Index():
 
 ## Section VENTAS
 
-@app.route('/ventas')
+@app.route('/ventas', methods=["GET", "POST"])
 def ventas():
     cur = mysql.connection.cursor()
+    cur.execute('SELECT * from cliente') 
+    clientes = cur.fetchall()
+    if(request.method == "POST"):
+        id_c = request.form['id_cliente']
+        cur.execute('SELECT v.fecha, c.nombre, v.concepto, v.cantidad, v.valor_unitario, v.total, v.id_venta, YEAR(v.fecha), MONTHNAME(v.fecha), DAY(v.fecha) FROM venta v, cliente c WHERE c.id_cliente = v.id_cliente AND v.id_cliente = %s ORDER BY v.fecha',(id_c,))
+        venta_cliente = cur.fetchall()
+        return render_template('ventas.html', ventas = venta_cliente, clientes = clientes)
+
     cur.execute('SELECT v.fecha, c.nombre, v.concepto, v.cantidad, v.valor_unitario, v.total, v.id_venta, YEAR(v.fecha), MONTHNAME(v.fecha), DAY(v.fecha) FROM venta v, cliente c WHERE c.id_cliente = v.id_cliente ORDER BY v.fecha')
-    data = cur.fetchall()  
-    return render_template('ventas.html', ventas = data)
+    data = cur.fetchall() 
+    return render_template('ventas.html', ventas = data, clientes = clientes)
 
 @app.route('/add_venta')
 def add_venta():
@@ -148,9 +156,11 @@ def ingresar_compra():
 @app.route('/abono_compra/<string:id>')
 def abono_compra(id):
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM abonoCompra WHERE id_compra = %s',(id,))
+    cur.execute('SELECT *, YEAR(fecha), MONTHNAME(fecha), DAY(fecha)  FROM abonoCompra WHERE id_proveedor = %s',(id,))
     data = cur.fetchall()
-    return render_template('abono_compra.html', abonos = data)
+    cur.execute('SELECT nombre FROM proveedor WHERE id_proveedor = %s', (id,))
+    proveedor = cur.fetchall()[0][0]
+    return render_template('abono_compra.html', abonos = data, proveedor = proveedor)
 
 @app.route('/add_abono_compra/<string:id>')
 def add_abono_compra(id):
@@ -163,52 +173,42 @@ def insertar_abono_compra(id):
         valor_abono = request.form['valor_abono']
         descripcion = request.form['descripcion']
         cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO abonoCompra (id_compra, valor_abono, descripcion, fecha) VALUES (%s, %s, %s, %s)',(id, valor_abono, descripcion, fecha))
+        cur.execute('INSERT INTO abonoCompra (id_proveedor, valor_abono, descripcion, fecha) VALUES (%s, %s, %s, %s)',(id, valor_abono, descripcion, fecha))
         mysql.connection.commit()
         return redirect(url_for('compras'))
 
 ##SALDOS 
 @app.route('/saldos', methods=['GET', 'POST'])
 def saldos():
+    cur = mysql.connection.cursor();
+    cur.execute('SELECT * FROM cliente')
+    clientes = cur.fetchall()
     if request.method == 'POST':
-        cur = mysql.connection.cursor()
-        if(request.form['id_cliente'] != '0'):
-            id_cliente = request.form['id_cliente']
-            cur.execute('SELECT * FROM cliente')
-            clientes = cur.fetchall()
-            cur.execute('SELECT * FROM proveedor')
-            proveedores = cur.fetchall()
-            cur.execute('SELECT * FROM cliente WHERE id_cliente = %s', (id_cliente,))
-            cliente = cur.fetchall()
-            cur.execute('SELECT * FROM saldoVentaTotal WHERE id_cliente =%s',(id_cliente,))
-            data = cur.fetchall()[0][1]
-            return render_template('saldos.html', cliente = cliente, saldo=data, clientes=clientes, proveedores=proveedores)
+        id_cliente = request.form['id_cliente']
+        cur.execute('SELECT * FROM cliente WHERE id_cliente = %s', (id_cliente,))
+        cliente = cur.fetchall()
+        cur.execute('SELECT * FROM saldoVentaTotal WHERE id_cliente =%s',(id_cliente,))
+        data = cur.fetchall()[0][1]
+        return render_template('saldos.html', clientes= clientes, cliente = cliente, saldo = data)
+    return render_template('saldos.html', clientes= clientes) 
 
+
+#SALDOS PROVEEDORES
+
+@app.route('/saldos_proveedores',  methods=['GET', 'POST'])
+def saldos_proveedores():
+    cur = mysql.connection.cursor();
+    cur.execute('SELECT * FROM proveedor')
+    proveedores = cur.fetchall()
+    if request.method == 'POST':
         id_proveedor = request.form['id_proveedor']
-        cur.execute('SELECT * FROM cliente')
-        clientes = cur.fetchall()
-        cur.execute('SELECT * FROM proveedor')
-        proveedores = cur.fetchall()
-
         cur.execute('SELECT * FROM proveedor WHERE id_proveedor = %s', (id_proveedor,))
         proveedor = cur.fetchall()
-  
         cur.execute('SELECT * FROM saldoCompraTotal WHERE id_proveedor =%s',(id_proveedor,))
         data = cur.fetchall()[0][1]
-    
-        return render_template('saldos.html', proveedor = proveedor, saldo=data, clientes=clientes, proveedores=proveedores)
-    else:
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM cliente')
-        data = cur.fetchall()
-        cur.execute('SELECT * FROM proveedor')
-        proveedores = cur.fetchall()
-        # cur.execute('SELECT * FROM cliente WHERE id_cliente = %s', (id,))
-        # cliente = cur.fetchall()
-        # cur.execute('SELECT * FROM saldoVentaTotal WHERE id_cliente =%s',(id,))
-        # saldo = cur.fetchall()[0][1]
-        return render_template('saldos.html', clientes=data, proveedores = proveedores)
-    
+        return render_template('saldos_proveedores.html', proveedores= proveedores, proveedor = proveedor, saldo = data)
+    return render_template('saldos_proveedores.html', proveedores= proveedores) 
+
 ##ELIMIAR VENTA
 @app.route('/eliminar/<string:id_venta>')
 def eliminar(id_venta):

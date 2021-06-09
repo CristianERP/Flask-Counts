@@ -1,25 +1,22 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-Saldos
+Saldos Proveedores
 {% endblock%}
 
 {% block body %}
-<form action="/saldos" method="POST">
-    <div class="row">
+<form action="/saldos_proveedores" method="POST">
         <div class="col-4 offset-1">
             <div class="my-3">
-                <label for="nombre" class="form-label">Cliente</label>
-                <select name="id_cliente" class="form-select" onchange="this.form.submit()">
+                <label for="nombre" class="form-label">Proveedor</label>
+                <select name="id_proveedor" class="form-select" onchange="this.form.submit()">
                     <option selected value="0">--Select--</option>
-                    {% for cliente in clientes%}
-                    <option value="{{cliente.0}}">{{cliente.1}} </option>
+                    {% for proveedor in proveedores%}
+                    <option value="{{proveedor.0}}">{{proveedor.1}} </option>
                     {% endfor %}
                 </select>  
             </div>
         </div>
-    </div>
-
    
 </form>
 <div class="container">
@@ -32,28 +29,18 @@ Saldos
             </tr>
         </thead>
         <tbody>
-            {%if cliente%}
-            {%for item in cliente%}
-            <tr>
-                <td>{{item.1}}</td>
-                <td id="currency_col">{{saldo}}</td>
-                <td>
-                    <a href="/add_abono/{{item.0}}" class="btn btn-info">Agregar</a>
-                    <a href="/abono_ventas/{{item.0}}" class="btn btn-secondary">Ver</a>  
-                </td>
-            </tr>
-            {%endfor%}
-            {%endif%}
+            {%if proveedor%}
             {%for item in proveedor%}
             <tr>
                 <td>{{item.1}}</td>
                 <td id="currency_col">{{saldo}}</td>
                 <td>
-                    <a href="/add_abono/{{item.0}}" class="btn btn-info">Agregar</a>
-                    <a href="/abono_ventas/{{item.0}}" class="btn btn-secondary">Ver</a>  
+                    <a href="/add_abono_compra/{{item.0}}" class="btn btn-info">Agregar</a>
+                    <a href="/abono_compra/{{item.0}}" class="btn btn-secondary">Ver</a>  
                 </td>
             </tr>
             {%endfor%}
+            {%endif%}
         </tbody>
     </table>
 </div>

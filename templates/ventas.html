@@ -6,6 +6,21 @@ Ventas
 
 {%block body%}
 <div class="container">
+    <form action="" method="POST">
+        <div class="row">
+            <div class="col-4 offset-4">
+                <div class="my-3">
+                    <label for="nombre" class="form-label">Cliente</label>
+                    <select name="id_cliente" class="form-select" onchange="this.form.submit()">
+                        <option selected value="0">--Select--</option>
+                        {%for cliente in clientes%}
+                        <option value="{{cliente.0}}">{{cliente.1}} </option>
+                        {%endfor%}
+                    </select>  
+                </div>
+            </div>
+        </div>
+    </form>
     <table class="table">
         <thead>
             <tr>
@@ -31,7 +46,8 @@ Ventas
                 <td>{{venta.4}}</td>
                 <td>{{venta.5}}</td>
                 <td>
-                    <a href="/eliminar/{{venta.6}}" class="btn btn-danger" id='confirm'>Eliminar</a>
+                    <a href="/eliminar/{{venta.6}}" class="btn btn-danger">Eliminar</a>
+                    <a href="" class="btn btn-primary">Pago</a>
                 </td>
             </tr>
             {% endfor%}

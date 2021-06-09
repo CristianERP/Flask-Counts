@@ -1,7 +1,8 @@
 SET FOREIGN_KEY_CHECKS = 1;
-drop database cuentasGranero;
+
 create database cuentasGranero;
 use cuentasgranero;
+
 
 create table cliente(
 	id_cliente int auto_increment,
@@ -151,6 +152,7 @@ $$
 delimiter ;
 
 use cuentasgranero;
-show tables;
+
+
 
 
